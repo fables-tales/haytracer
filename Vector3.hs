@@ -3,8 +3,8 @@ module Vector3 where
 data VectorClass = Vector3 (Double, Double, Double) deriving (Show, Eq)
 
 normalized :: VectorClass -> VectorClass
-normalized (Vector3 (x, y, z)) = Vector3 (x/length, y/length, z/length)
-    where length = sqrt ( x*x + y*y + z*z)
+normalized (Vector3 (x, y, z)) = Vector3 (x/mag, y/mag, z/mag)
+    where mag = sqrt ( x*x + y*y + z*z)
 
 negative :: VectorClass -> VectorClass
 negative (Vector3 (x, y, z)) = Vector3 (-x, -y, -z)

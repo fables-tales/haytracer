@@ -8,10 +8,14 @@ import System.IO.Error hiding (catch)
 import Vector3
 
 
-fileName = "fractal2345.png"
+outputFileName :: String
+outputFileName = "fractal2345.png"
 
+main :: IO ()
 main = do
-    removeIfExists fileName; ilInit; writeImage fileName image
+    removeIfExists outputFileName
+    ilInit
+    writeImage outputFileName image
 
 removeIfExists :: FilePath -> IO ()
 removeIfExists fileName = removeFile fileName `catch` handleExists
@@ -19,17 +23,18 @@ removeIfExists fileName = removeFile fileName `catch` handleExists
           | isDoesNotExistError e = return ()
           | otherwise = throwIO e
 
-width :: Int
+width, height :: Int
 width  = 244
-
-height ::Int
 height = 244
 
 image :: UArray (Int, Int, Int) Word8
 image = array ((0,0,0),(width, height,3)) render
 
 render :: [((Int,Int,Int),Word8)]
-render = do { x <- [0..width-1] ; y <- [0..height-1] ; zip (channelIdentifiers x y) (pixel x y) }
+render = do
+    x <- [0..width-1]
+    y <- [0..height-1]
+    zip (channelIdentifiers x y) (pixel x y)
 
 channelIdentifiers :: Int -> Int -> [(Int, Int, Int)]
 channelIdentifiers x y = [(x,y,channel) | channel <- [0..3]]
@@ -42,15 +47,20 @@ pixel x y = if isJust (distanceToIntersection (rayFor (Vector3 (0,0,0)) (Vector3
 --intersection stuff
 
 distanceToIntersection :: RayClass -> Shape -> Maybe Double
-distanceToIntersection ray (Sphere center radius) = if vectorDistance (closestPoint ray center) center < radius then Just 1.0 else Nothing
+distanceToIntersection ray (Sphere center radius)
+ = if inRadius then Just 1.0 else Nothing
+      where inRadius = distanceToRay < radius
+            distanceToRay = vectorDistance pointOnRay center
+            pointOnRay = closestPoint ray center
 
 closestPoint :: RayClass -> VectorClass -> VectorClass
-closestPoint (Ray direction origin) point = addVector origin (scaled aToB t) where
-                                                    a = origin
-                                                    b = addVector origin (scaled direction 10000000000)
-                                                    aToB = b `subVector` a
-                                                    aToP = point `subVector` a
-                                                    t = dotProduct aToP aToB / len2 aToB
+closestPoint (Ray direction origin) point
+ = addVector origin (scaled aToB t) where
+     a = origin
+     b = addVector origin (scaled direction 10000000000)
+     aToB = b `subVector` a
+     aToP = point `subVector` a
+     t = dotProduct aToP aToB / len2 aToB
 
 --end intersection stuff
 
@@ -59,6 +69,7 @@ closestPoint (Ray direction origin) point = addVector origin (scaled aToB t) whe
 rayFor :: VectorClass -> VectorClass -> VectorClass -> (Int, Int) -> RayClass
 rayFor position look up (x,y) = Ray (directionFor look up (x,y)) position
 
+d, left, right, top, bottom :: Double
 d      = 1.0
 left   = -1.0
 right  = 1.0

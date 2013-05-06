@@ -24,10 +24,8 @@ removeIfExists fileName = removeFile fileName `catch` handleExists
           | isDoesNotExistError e = return ()
           | otherwise = throwIO e
 
-width :: Int
+width, height :: Int
 width  = 244
-
-height ::Int
 height = 244
 
 image :: UArray (Int, Int, Int) Word8

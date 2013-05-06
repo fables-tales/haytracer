@@ -11,7 +11,9 @@ import Vector3
 fileName = "fractal2345.png"
 
 main = do
-    removeIfExists fileName; ilInit; writeImage fileName image
+    removeIfExists fileName
+    ilInit
+    writeImage fileName image
 
 removeIfExists :: FilePath -> IO ()
 removeIfExists fileName = removeFile fileName `catch` handleExists

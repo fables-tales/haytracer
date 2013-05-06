@@ -1,4 +1,3 @@
-import Data.Complex
 import Data.Maybe
 import Codec.Image.DevIL
 import Data.Array.Unboxed
@@ -9,11 +8,10 @@ import System.IO.Error hiding (catch)
 import Vector3
 
 
-fileName = "trace.png"
+fileName = "fractal2345.png"
 
 main = do
-    removeIfExists fileName
-    ilInit >> writeImage fileName image
+    removeIfExists fileName; ilInit; writeImage fileName image
 
 removeIfExists :: FilePath -> IO ()
 removeIfExists fileName = removeFile fileName `catch` handleExists
@@ -22,7 +20,7 @@ removeIfExists fileName = removeFile fileName `catch` handleExists
           | otherwise = throwIO e
 
 width :: Int
-width  = 200
+width  = 244
 
 height ::Int
 height = 244
@@ -52,7 +50,7 @@ closestPoint (Ray direction origin) point = addVector origin (scaled aToB t) whe
                                                     b = addVector origin (scaled direction 10000000000)
                                                     aToB = b `subVector` a
                                                     aToP = point `subVector` a
-                                                    t = (dotProduct aToP aToB) / (len2 aToB)
+                                                    t = dotProduct aToP aToB / len2 aToB
 
 --end intersection stuff
 
@@ -77,10 +75,10 @@ directionFor look up (x, y) = (normalized . addVectors) [p1, p2, p3] where
                                 p3 = scaled v (vForPixel y)
 
 uForPixel :: Int -> Double
-uForPixel x = left + (right-left) * ((fromIntegral x) / fromIntegral width)
+uForPixel x = left + (right-left) * (fromIntegral x / fromIntegral width)
 
 vForPixel :: Int -> Double
-vForPixel y = bottom + (top-bottom) * ((fromIntegral y) / fromIntegral height)
+vForPixel y = bottom + (top-bottom) * (fromIntegral y / fromIntegral height)
 
 wVector :: VectorClass -> VectorClass
 wVector = negative . normalized

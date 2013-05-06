@@ -9,14 +9,14 @@ import System.IO.Error hiding (catch)
 import Vector3
 
 
-fileName :: String
-fileName = "fractal2345.png"
+outputFileName :: String
+outputFileName = "fractal2345.png"
 
 main :: IO ()
 main = do
-    removeIfExists fileName
+    removeIfExists outputFileName
     ilInit
-    writeImage fileName image
+    writeImage outputFileName image
 
 removeIfExists :: FilePath -> IO ()
 removeIfExists fileName = removeFile fileName `catch` handleExists

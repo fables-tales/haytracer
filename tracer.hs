@@ -72,6 +72,7 @@ closestPoint (Ray direction origin) point
 rayFor :: VectorClass -> VectorClass -> VectorClass -> (Int, Int) -> RayClass
 rayFor position look up (x,y) = Ray (directionFor look up (x,y)) position
 
+d, left, right, top, bottom :: Double
 d      = 1.0
 left   = -1.0
 right  = 1.0

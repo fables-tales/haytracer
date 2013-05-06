@@ -50,12 +50,13 @@ distanceToIntersection :: RayClass -> Shape -> Maybe Double
 distanceToIntersection ray (Sphere center radius) = if vectorDistance (closestPoint ray center) center < radius then Just 1.0 else Nothing
 
 closestPoint :: RayClass -> VectorClass -> VectorClass
-closestPoint (Ray direction origin) point = addVector origin (scaled aToB t) where
-                                                    a = origin
-                                                    b = addVector origin (scaled direction 10000000000)
-                                                    aToB = b `subVector` a
-                                                    aToP = point `subVector` a
-                                                    t = dotProduct aToP aToB / len2 aToB
+closestPoint (Ray direction origin) point
+ = addVector origin (scaled aToB t) where
+     a = origin
+     b = addVector origin (scaled direction 10000000000)
+     aToB = b `subVector` a
+     aToP = point `subVector` a
+     t = dotProduct aToP aToB / len2 aToB
 
 --end intersection stuff
 

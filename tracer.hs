@@ -31,7 +31,10 @@ image :: UArray (Int, Int, Int) Word8
 image = array ((0,0,0),(width, height,3)) render
 
 render :: [((Int,Int,Int),Word8)]
-render = do { x <- [0..width-1] ; y <- [0..height-1] ; zip (channelIdentifiers x y) (pixel x y) }
+render = do
+    x <- [0..width-1]
+    y <- [0..height-1]
+    zip (channelIdentifiers x y) (pixel x y)
 
 channelIdentifiers :: Int -> Int -> [(Int, Int, Int)]
 channelIdentifiers x y = [(x,y,channel) | channel <- [0..3]]

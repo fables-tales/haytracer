@@ -9,6 +9,7 @@ import System.IO.Error hiding (catch)
 import Vector3
 
 
+fileName :: String
 fileName = "fractal2345.png"
 
 main :: IO ()

@@ -1,5 +1,4 @@
 import Data.Maybe
-import Control.Monad(guard)
 import Codec.Image.DevIL
 import Data.Array.Unboxed
 import Prelude hiding (catch)
@@ -48,11 +47,11 @@ pixel x y = if isJust (distanceToIntersection (rayFor (Vector3 (0,0,0)) (Vector3
 --intersection stuff
 
 distanceToIntersection :: RayClass -> Shape -> Maybe Double
-distanceToIntersection ray (Sphere center radius) = do
-    let pointOnRay = closestPoint ray center
-    let distanceToRay = vectorDistance pointOnRay center
-    guard (distanceToRay < radius)
-    return 1.0
+distanceToIntersection ray (Sphere center radius)
+ = if inRadius then Just 1.0 else Nothing
+      where inRadius = distanceToRay < radius
+            distanceToRay = vectorDistance pointOnRay center
+            pointOnRay = closestPoint ray center
 
 closestPoint :: RayClass -> VectorClass -> VectorClass
 closestPoint (Ray direction origin) point
